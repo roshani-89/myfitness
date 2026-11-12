@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fit Tracker</title>
+<style>
+:root{--bg:#faf7f5;--card:#fff;--tx:#241f21;--mu:#7a6f73;--ac:#e0457b;--ac2:#fde6ee;--ln:#eadfe3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17131a;--card:#221c26;--tx:#f3eef5;--mu:#a99eae;--ac:#ff6fa0;--ac2:#3a2230;--ln:#352d3a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17131a;--card:#221c26;--tx:#f3eef5;--mu:#a99eae;--ac:#ff6fa0;--ac2:#3a2230;--ln:#352d3a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:640px;margin:0 auto;padding:14px 14px 40px}
+h1{font-size:20px;margin:6px 0 12px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;padding:10px;border:1px solid var(--ln);background:var(--card);color:var(--tx);border-radius:12px;font-size:15px;cursor:pointer}
+.tabs button.on{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:14px;margin-bottom:12px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.mu{color:var(--mu);font-size:13px}
+.bar{height:8px;background:var(--ac2);border-radius:6px;margin:6px 0 10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ac)}
+.it{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--ln)}
+.it label{display:flex;gap:10px;align-items:flex-start;flex:1}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--ac);margin-top:1px;flex:none}
+input:not([type=checkbox]){background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:8px;font-size:14px;max-width:100%}
+.kg{width:90px}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-size:14px;cursor:pointer}
+.btn.g{background:var(--ac2);color:var(--ac)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0}
+.stat{background:var(--ac2);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:22px;color:var(--ac)}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:6px;border-top:1px solid var(--ln);text-align:left;white-space:nowrap}
+</style>
+</head>
+<body>
+<main>
+<h1>💪 Fit Tracker</h1>
+<div class="tabs"><button data-tab="today">Aaj</button><button data-tab="prog">Progress</button></div>
+<div id="app"></div>
+<p class="mu" id="note"></p>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const wd=d=>new Date(d+"T12:00:00").getDay();
+const W={
+1:["Lower: quad + glutes",["Barbell squat 4x8-10","Leg press 3x12","Walking lunges 3x12/leg","Leg extension 3x15","Hip thrust 3x10-12","Calf raises 3x15","Incline walk 15 min"]],
+2:["Upper: push + pull",["Lat pulldown 4x10","Dumbbell bench press 3x10","Seated cable row 3x12","Shoulder press 3x10","Lateral raises 3x15","Triceps pushdown 2x12","Dumbbell curls 2x12","Cycling 10 min"]],
+3:["Heavy abs + HIIT",["Hanging leg raise 4x12-15","Ab wheel rollout 4x10-12","Cable crunch 4x12-15","Dragon flag negatives 3x6-8","Hollow body hold 3x30-45s","Stomach vacuum 5x20-30s","HIIT 20 min"]],
+4:["Lower: hamstring + glutes",["Romanian deadlift 4x8-10","Bulgarian split squat 3x10/leg","Hamstring curl 3x12","Glute bridge/kickback 3x15","Hip abduction 3x15","Incline walk 15 min"]],
+5:["Upper + shoulders",["Pull-ups 3xmax","Incline DB press 3x10","Face pulls 3x15","Arnold press 3x10","Dumbbell row 3x12","Push-ups 2xmax","Rowing/cycling 10 min"]],
+6:["Full body + core circuit",["Deadlift 3x6-8","Goblet squat 3x12","KB swings/battle ropes 4x30s","Core circuit 4 rounds","HIIT 15 min + walk 15 min"]],
+0:["Rest day",["Easy walk 30-40 min"]]};
+const D={
+1:["Omelette (1 ande + 3 whites) + 2 brown bread","2 roti, dal, 100 g chicken curry, salad","Curd + 1 fruit","120 g grilled chicken, sabzi, 1 roti"],
+2:["Oats + banana + 5 badaam + 1 boiled ande","Chawal, rajma/dal, sabzi, curd","Roasted chana","120 g fish, sabzi, 1 roti"],
+3:["Besan chilla x2 + curd","2 roti, 100 g chicken, sabzi, salad","1 boiled ande + fruit","Egg bhurji (3 ande), sabzi, 1 roti"],
+4:["2 ande scramble + 2 bread + fruit","Chawal, dal, 100 g fish, salad","Curd + 5 badaam","120 g chicken tikka, sabzi, salad"],
+5:["Poha/upma + 1 boiled ande","2 roti, dal, sabzi, curd, chicken","Makhana ya chana","120 g fish/chicken, sabzi, 1 roti"],
+6:["Moong chilla x2 + 1 ande","Chawal, 100 g chicken, sabzi","Fruit + curd","Egg curry (2 ande), sabzi, 1 roti"],
+0:["Omelette + 1 roti","Chawal, dal, 100 g chicken/fish","Fruit + 5 badaam","Soup + grilled chicken/ande + sabzi"]};
+const ML=["Breakfast","Lunch","Snack","Dinner"];
+let S={days:{},body:[]},store=null,tab="today",dt=iso(new Date());
+const day=d=>S.days[d]||(S.days[d]={x:{},w:{},m:{},wa:0,st:""});
+
+async function init(){
+  let ok=false;
+  try{
+    if(typeof claude!=="undefined"){
+      const u=await claude.use("user"),db=await claude.use("db");
+      if(u&&db){const id=await u.id();if(id){store=db.collection("data/users/"+id).doc("tracker");const s=await store.get();if(s.exists&&s.data().json){S=JSON.parse(s.data().json);ok=true}}}
+    }
+  }catch(e){store=null}
+  if(!ok){try{const j=localStorage.getItem("fit");if(j)S=JSON.parse(j)}catch(e){}}
+  if(!S.days)S.days={};if(!S.body)S.body=[];
+  $("#note").textContent=store?"Data aapke account mein private save hota hai.":"Data is browser mein save hota hai.";
+  render();
+}
+function save(){
+  const j=JSON.stringify(S);
+  try{localStorage.setItem("fit",j)}catch(e){}
+  if(store)store.set({json:j}).catch(()=>{});
+}
+
+function todayV(){
+  const k=wd(dt),p=W[k],ex=p[1],y=day(dt),dn=ex.filter((_,i)=>y.x[i]).length,mn=D[k];
+  return `<div class="card"><div class="row"><input type="date" id="dt" value="${dt}"><b>${esc(p[0])}</b></div>
+  <div class="mu">Workout: ${dn}/${ex.length} complete</div><div class="bar"><i style="width:${dn/ex.length*100}%"></i></div>
+  ${ex.map((e,i)=>`<div class="it"><label><input type="checkbox" data-x="${i}" ${y.x[i]?"checked":""}><span>${esc(e)}</span></label><input class="kg" data-w="${i}" placeholder="kg x reps" value="${esc(y.w[i])}"></div>`).join("")}</div>
+  <div class="card"><b>Diet</b><div class="mu">Target: ~1,650 kcal, 95-105 g protein</div>
+  ${ML.map((n,i)=>`<div class="it"><label><input type="checkbox" data-m="${i}" ${y.m[i]?"checked":""}><span><b>${n}</b><br><span class="mu">${esc(mn[i])}</span></span></label></div>`).join("")}
+  <div class="it"><span>Paani (glass, 12 = 3 L): <b>${y.wa}</b></span><span><button class="btn g" data-act="w-">-</button> <button class="btn" data-act="w+">+</button></span></div>
+  <div class="it"><span>Steps (target 8,000-10,000)</span><input type="number" data-st="1" style="width:100px" value="${esc(y.st)}"></div></div>`;
+}
+
+function chart(b,key,lab,unit){
+  const p=b.filter(r=>r[key]);
+  if(p.length<2)return `<div class="mu" style="margin:8px 0">${lab}: graph ke liye 2 entries chahiye</div>`;
+  const v=p.map(r=>+r[key]),mn=Math.min(...v),mx=Math.max(...v),r=mx-mn||1;
+  const pts=v.map((x,i)=>[10+i*(280/(v.length-1)),100-(x-mn)/r*80]);
+  const diff=(v[v.length-1]-v[0]).toFixed(1);
+  return `<div style="margin:10px 0"><b>${lab}</b> <span class="mu">${v[0]} → ${v[v.length-1]} ${unit} (${diff>0?"+":""}${diff})</span>
+  <svg viewBox="0 0 300 115" width="100%" role="img" aria-label="${lab} graph"><polyline fill="none" stroke="var(--ac)" stroke-width="2.5" points="${pts.map(q=>q.join(",")).join(" ")}"/>${pts.map(q=>`<circle cx="${q[0]}" cy="${q[1]}" r="3.5" fill="var(--ac)"/>`).join("")}</svg></div>`;
+}
+
+function progV(){
+  const b=[...S.body].sort((a,c)=>a.d<c.d?-1:1);
+  let wk=0,need=0,md=0,wat=0,wn=0;
+  for(let i=0;i<7;i++){
+    const d=new Date();d.setDate(d.getDate()-i);const ds=iso(d),k=wd(ds),ex=W[k][1],y=S.days[ds];
+    if(k)need++;
+    if(y){if(k&&ex.every((_,j)=>y.x[j]))wk++;md+=Object.values(y.m).filter(Boolean).length;if(y.wa){wat+=y.wa;wn++}}
+  }
+  const t=iso(new Date());
+  return `<div class="card"><b>Last 7 din</b><div class="grid">
+  <div class="stat"><b>${wk}/${need}</b>workouts complete</div>
+  <div class="stat"><b>${Math.round(md/28*100)}%</b>meals follow kiye</div>
+  <div class="stat"><b>${wn?(wat/wn).toFixed(1):0}</b>avg glass paani</div>
+  <div class="stat"><b>${b.length?b[b.length-1].w||"-":"-"}</b>latest weight (kg)</div></div></div>
+  <div class="card"><b>Body measurements add karo</b><div class="mu">Har 1-2 hafte mein, subah, same time par</div>
+  <div class="row" style="margin-top:8px"><input type="date" id="bd" value="${t}"><input type="number" step="0.1" id="bw" placeholder="Weight kg" style="width:110px"><input type="number" step="0.1" id="bk" placeholder="Kamar cm" style="width:110px"><input type="number" step="0.1" id="bh" placeholder="Hips cm" style="width:110px"><button class="btn" data-act="add">Add</button></div></div>
+  <div class="card">${chart(b,"k","Kamar","cm")}${chart(b,"w","Weight","kg")}${chart(b,"h","Hips","cm")}
+  ${b.length?`<div class="wrap"><table><tr><th>Date</th><th>Kg</th><th>Kamar</th><th>Hips</th><th></th></tr>${b.slice().reverse().map(r=>`<tr><td>${esc(r.d)}</td><td>${esc(r.w||"-")}</td><td>${esc(r.k||"-")}</td><td>${esc(r.h||"-")}</td><td><button class="btn g" data-del="${r.id}">x</button></td></tr>`).join("")}</table></div>`:`<div class="mu">Abhi koi entry nahi hai.</div>`}</div>`;
+}
+
+function render(){
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===tab));
+  $("#app").innerHTML=tab==="today"?todayV():progV();
+}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.tab){tab=t.dataset.tab;render();return}
+  const a=t.dataset.act,y=day(dt);
+  if(a==="w+"){y.wa=Math.min(20,y.wa+1);save();render()}
+  else if(a==="w-"){y.wa=Math.max(0,y.wa-1);save();render()}
+  else if(a==="add"){
+    const r={id:Date.now(),d:$("#bd").value,w:$("#bw").value,k:$("#bk").value,h:$("#bh").value};
+    if(!r.d||!(r.w||r.k||r.h))return;
+    S.body=S.body.filter(x=>x.d!==r.d);S.body.push(r);save();render();
+  }
+  else if(t.dataset.del){S.body=S.body.filter(x=>String(x.id)!==t.dataset.del);save();render()}
+});
+document.addEventListener("change",e=>{
+  const t=e.target,y=day(dt);
+  if(t.id==="dt"){if(t.value)dt=t.value;render();return}
+  if(t.dataset.x!==undefined){y.x[t.dataset.x]=t.checked}
+  else if(t.dataset.m!==undefined){y.m[t.dataset.m]=t.checked}
+  else if(t.dataset.w!==undefined){y.w[t.dataset.w]=t.value}
+  else if(t.dataset.st!==undefined){y.st=t.value}
+  else return;
+  save();render();
+});
+init();
+</script>
+</body>
+</html>
