@@ -2308,14 +2308,7 @@ document.addEventListener("click", e => {
       return;
     }
 
-    if (a === "check-meal") {
-      if (!dayRec.meals) dayRec.meals = {};
-      dayRec.meals[act.dataset.meal] = act.checked;
-      triggerHaptic(20);
-      saveState();
-      renderApp();
-      return;
-    }
+
   }
 
   const pCap = e.target.closest(".preset-capsule");
