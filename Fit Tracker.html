@@ -6,36 +6,39 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#07090e">
+<meta name="theme-color" content="#f5f1e8">
 <title>IRONFIT PRO • Performance Fitness Architecture</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 
 :root {
-  --bg: #07090e;
-  --bg-subtle: #0d1118;
-  --card: #121622;
-  --card-elevated: #181e2c;
-  --card-hover: #1f2738;
+  /* Signature Oat Milk & Forest Green Luxury Palette */
+  --bg: #f5f1e8;           /* Creamy warm oat milk */
+  --bg-subtle: #eae4d5;    /* Warm stone oat */
+  --card: #faf7f2;         /* Crisp oat porcelain surface */
+  --card-elevated: #ffffff;/* Pure elevated surface */
+  --card-hover: #f1ebd9;
   
-  --border: rgba(255, 255, 255, 0.07);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --border-focus: #10b981;
+  --border: #e2dbce;       /* Refined warm linen border */
+  --border-strong: #cfc5b3;
+  --border-focus: #1b4332;
   
-  --tx: #f8fafc;
-  --tx-muted: #94a3b8;
-  --tx-dim: #64748b;
+  --tx: #142419;           /* Deep botanical pine text */
+  --tx-muted: #556c5e;     /* Sage-toned secondary */
+  --tx-dim: #84998c;
   
-  --primary: #10b981;
-  --primary-glow: rgba(16, 185, 129, 0.25);
-  --primary-subtle: rgba(16, 185, 129, 0.1);
+  --primary: #1e4633;      /* Deep British/Botanical Forest Green */
+  --primary-hover: #26573f;
+  --primary-glow: rgba(30, 70, 51, 0.16);
+  --primary-subtle: rgba(30, 70, 51, 0.08);
+  --primary-contrast: #f5f1e8; /* Warm oat milk text */
   
-  --accent: #38bdf8;
-  --accent-glow: rgba(56, 189, 248, 0.25);
-  --accent-subtle: rgba(56, 189, 248, 0.1);
+  --accent: #3d6b51;       /* Harmonious alpine pine */
+  --accent-glow: rgba(61, 107, 81, 0.2);
+  --accent-subtle: rgba(61, 107, 81, 0.1);
   
-  --warning: #f59e0b;
-  --warning-subtle: rgba(245, 158, 11, 0.1);
+  --warning: #b45309;
+  --warning-subtle: rgba(180, 83, 9, 0.08);
   
   --radius-xs: 6px;
   --radius-sm: 10px;
@@ -43,44 +46,47 @@
   --radius-lg: 20px;
   --radius-full: 9999px;
   
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 24px var(--primary-glow);
+  --shadow-sm: 0 2px 8px rgba(20, 36, 25, 0.04);
+  --shadow-md: 0 12px 30px rgba(20, 36, 25, 0.08);
+  --shadow-glow: 0 0 20px var(--primary-glow);
   
   --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "Space Grotesk", monospace;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-[data-theme="light"] {
-  --bg: #f8fafc;
-  --bg-subtle: #f1f5f9;
-  --card: #ffffff;
-  --card-elevated: #f8fafc;
-  --card-hover: #f1f5f9;
+[data-theme="dark"] {
+  /* Midnight Forest & Warm Oat Milk */
+  --bg: #0c130f;           /* Deep midnight botanical forest */
+  --bg-subtle: #121c16;
+  --card: #16241c;         /* Pine bark slate */
+  --card-elevated: #1d2e24;
+  --card-hover: #253b2e;
   
-  --border: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.16);
-  --border-focus: #059669;
+  --border: rgba(245, 241, 232, 0.08);
+  --border-strong: rgba(245, 241, 232, 0.16);
+  --border-focus: #52946f;
   
-  --tx: #0f172a;
-  --tx-muted: #64748b;
-  --tx-dim: #94a3b8;
+  --tx: #f5f1e8;           /* Warm Oat Milk typography */
+  --tx-muted: #a7b9ae;     /* Soft warm sage */
+  --tx-dim: #728779;
   
-  --primary: #059669;
-  --primary-glow: rgba(5, 150, 105, 0.2);
-  --primary-subtle: rgba(5, 150, 105, 0.08);
+  --primary: #4e8c69;      /* Luminous forest leaf */
+  --primary-hover: #5fa57c;
+  --primary-glow: rgba(78, 140, 105, 0.28);
+  --primary-subtle: rgba(78, 140, 105, 0.14);
+  --primary-contrast: #0c130f;
   
-  --accent: #0284c7;
-  --accent-glow: rgba(2, 132, 199, 0.2);
-  --accent-subtle: rgba(2, 132, 199, 0.08);
+  --accent: #78a88c;
+  --accent-glow: rgba(120, 168, 140, 0.25);
+  --accent-subtle: rgba(120, 168, 140, 0.12);
   
-  --warning: #d97706;
-  --warning-subtle: rgba(217, 119, 6, 0.08);
+  --warning: #f59e0b;
+  --warning-subtle: rgba(245, 158, 11, 0.1);
   
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
-  color-scheme: light;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -93,8 +99,8 @@ body {
   min-height: 100vh;
   padding-bottom: 96px;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.07), transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.04), transparent 45%);
+    radial-gradient(circle at 50% 0%, rgba(30, 70, 51, 0.06), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(61, 107, 81, 0.03), transparent 45%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
@@ -204,12 +210,12 @@ body {
   box-shadow: 0 0 8px currentColor;
 }
 .db-pill.neon-online {
-  border-color: rgba(16, 185, 129, 0.4);
+  border-color: rgba(30, 70, 51, 0.4);
   color: var(--primary);
   background: var(--primary-subtle);
 }
 .db-pill.idb-online {
-  border-color: rgba(56, 189, 248, 0.4);
+  border-color: rgba(61, 107, 81, 0.4);
   color: var(--accent);
   background: var(--accent-subtle);
 }
@@ -340,12 +346,7 @@ body {
 .pill-badge.primary {
   background: var(--primary-subtle);
   color: var(--primary);
-  border-color: rgba(16, 185, 129, 0.3);
-}
-.pill-badge.accent {
-  background: var(--accent-subtle);
-  color: var(--accent);
-  border-color: rgba(56, 189, 248, 0.3);
+  border-color: rgba(30, 70, 51, 0.3);
 }
 
 /* Metrics Grid */
@@ -572,7 +573,7 @@ body {
 .check-trigger.done {
   background: var(--primary);
   border-color: var(--primary);
-  color: #07090e;
+  color: var(--primary-contrast);
   box-shadow: 0 2px 8px var(--primary-glow);
 }
 .rest-link-btn {
@@ -592,7 +593,7 @@ body {
 /* Buttons */
 .btn {
   background: var(--primary);
-  color: #07090e;
+  color: var(--primary-contrast);
   border: none;
   font-family: var(--font);
   font-weight: 700;
@@ -629,7 +630,7 @@ body {
   transform: translateX(-50%);
   width: calc(100% - 28px);
   max-width: 500px;
-  background: rgba(18, 22, 34, 0.92);
+  background: var(--bg);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--border-strong);
@@ -1389,7 +1390,7 @@ async function initStorage() {
   if (!S.customEx) S.customEx = {};
 
   // Apply theme
-  const savedTheme = localStorage.getItem("ironfit_theme") || "dark";
+  const savedTheme = localStorage.getItem("ironfit_theme") || "light";
   document.documentElement.setAttribute("data-theme", savedTheme);
   updateThemeIcon();
 
@@ -2136,7 +2137,7 @@ function launchConfetti() {
   canvas.height = window.innerHeight;
 
   const pieces = [];
-  const palette = ["#10b981", "#38bdf8", "#f59e0b", "#6366f1", "#f43f5e"];
+  const palette = ["#1e4633", "#3d6b51", "#f5f1e8", "#c8a96e", "#4e8c69"];
 
   for (let i = 0; i < 90; i++) {
     pieces.push({
