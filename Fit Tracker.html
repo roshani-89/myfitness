@@ -1816,33 +1816,7 @@ function renderDietView() {
       </div>
     </div>
 
-    <!-- Nutrition Timeline -->
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title">Nutrition Timeline</div>
-        <span class="pill-badge">4 Structured Meals</span>
-      </div>
 
-      <div>
-        ${dayPlan.map((m, idx) => {
-          const isDone = !!(dayRec.meals && dayRec.meals[idx]);
-          return `
-            <div style="background:var(--card-elevated); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; margin-bottom:8px; display:flex; align-items:flex-start; gap:12px; ${isDone ? 'opacity:0.75;' : ''}">
-              <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary); margin-top:2px; cursor:pointer;" data-act="check-meal" data-meal="${idx}" ${isDone ? 'checked' : ''}>
-              <div style="flex:1;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
-                  <span style="font-size:13px; font-weight:700; color:var(--tx);">${m.title}: ${m.name}</span>
-                  <span style="font-size:11px; font-family:var(--font-mono); color:var(--primary); font-weight:700;">${m.cal} kcal • ${m.p}g P</span>
-                </div>
-                <div style="font-size:11px; color:var(--tx-muted); line-height:1.4;">${m.desc}</div>
-              </div>
-            </div>
-          `;
-        }).join("")}
-      </div>
-    </div>
-  `;
-}
 
 function renderProgressView() {
   const records = [...S.body].sort((a, b) => (a.d < b.d ? -1 : 1));
