@@ -13,6 +13,7 @@ const os = require('node:os');
 const { neon } = require('@neondatabase/serverless');
 
 const PORT = process.env.PORT || 3000;
+const HOST = '0.0.0.0'; // listen on all interfaces
 const HTML_FILE = path.join(__dirname, 'Fit Tracker.html');
 const DATABASE_URL = process.env.DATABASE_URL;
 
